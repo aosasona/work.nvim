@@ -1,3 +1,5 @@
+![Screenshot](./screenshot.png)
+
 This config does not have a lot of stuff you may want but it is functional for me. I work directly on a remote server at work which means I cannot install all willy-nilly things like Ripgrep and similar, so I had to craft this config from scratch after work because I did not want to work with Jetbrains' remote development thingy anymore when I could just work directly off the server.
 
 # Highlights
