@@ -3,6 +3,12 @@ return {
 	"tpope/vim-surround",
 	"saadparwaiz1/cmp_luasnip",
 	{
+		"AlexvZyl/nordic.nvim",
+		config = function()
+			require("nordic").load()
+		end,
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false,
 		build = ":TSUpdate",
@@ -15,6 +21,19 @@ return {
 				indent = { enable = true },
 			})
 		end,
+	},
+	{
+		"nvim-lualine/lualine.nvim",
+		config = function()
+			require("lualine").setup({
+				-- options = {
+				-- 	theme = "gruvbox"
+				-- }
+			})
+		end,
+		dependencies = {
+			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+		},
 	},
 	{
 		"williamboman/mason.nvim",
@@ -84,6 +103,7 @@ return {
 		end,
 	},
 	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 	{
 		"nvim-telescope/telescope.nvim",
 		version = "0.1.x",
@@ -98,10 +118,7 @@ return {
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-			{
-				"nvim-tree/nvim-web-devicons",
-				enabled = vim.g.have_nerd_font,
-			},
+			{ "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
 		},
 		config = function()
 			require("telescope").setup({})
@@ -112,8 +129,8 @@ return {
 			-- Telescope keymaps
 			local builtin = require("telescope.builtin")
 			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Search files" })
-			-- vim.keymap.set('n', '<leader>fW', builtin.grep_string, { desc = 'Search current word' })
-			-- vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep' })
+			-- vim.keymap.set("n", "<leader>fW", builtin.grep_string, { desc = "Search current word" })
+			-- vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
 		end,
 	},
 	{

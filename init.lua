@@ -2,7 +2,7 @@ local kmap = require("utils").create_keymap
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 vim.g.autoformat_enabled = false
 
 -- ############# Lazy.nvim ############## --
@@ -29,20 +29,24 @@ vim.opt.spell = false
 vim.opt.wrap = true
 vim.opt.background = "dark"
 vim.opt.cursorline = true
-
-vim.cmd([[colorscheme gruvbox-material]])
+vim.opt.ruler = true
+vim.opt.showmatch = true
+vim.opt.scrolloff = 12
 
 -- Line number
 vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- General formatting settings
--- vim.opt.expandtab = true -- use spaces
+-- We are letting sleuth take care of this now, it auto-detects it from the file itself
+--
+-- vim.opt.expandtab = false -- use tab character
+-- vim.opt.tabstop = 4
 -- vim.opt.shiftwidth = 4
--- vim.opt.softtabstop = 4
 
--- vim.opt.fileformat = 'dos'
-vim.opt.fileformats = "unix,dos"
+vim.opt.fileformats = "dos,unix"
+
+vim.cmd([[colorscheme gruvbox-material]])
 
 vim.opt.mouse = "a"               -- allow mouse usage
 vim.opt.showmode = false          -- hide mode since it is in status line
@@ -72,6 +76,15 @@ vim.opt.splitbelow = true
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
+
+-- Highlight on yank
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -119,7 +132,7 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 
 -- ########### Keymaps ########### --
 --
--- In the future, it'll be nice to refactor these into their own tables and files
+-- In the future, it"ll be nice to refactor these into their own tables and files
 
 -- Misc
 kmap("n", "<leader>w", "<cmd>:w<CR>", { desc = "Save buffer" })
@@ -170,7 +183,7 @@ kmap(
 )
 
 -- Disabled on purpose
--- kmap('n', '<leader>lf', '<cmd>lua vim.lsp.buf.format{ async = true }<cr>', { noremap = true, desc = 'Format buffer' })
+-- kmap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", { noremap = true, desc = "Format buffer" })
 
 -- Session mappings
 kmap("n", "<leader>sf", resession.list, { desc = "List all available saved sessions" })
