@@ -1,20 +1,20 @@
 local M = {}
 
--- This file really shows how great I am at Lua 
+-- This file really shows how great I am at Lua
 --
 -- /s
 function M.create_keymap(mode, key, cmd, opts)
-	opts = opts or {}
+  opts = opts or {}
 
-	-- set `silent` and `noremap` by default
-	local noremap = opts['noremap'] or false
-	opts['remap'] = not noremap
+  -- set `silent` and `noremap` by default
+  local noremap = opts["noremap"] or false
+  opts["remap"] = not noremap
 
-	if opts['silent'] == nil then
-		opts['silent'] = true
-	end
+  if opts["silent"] == nil then
+    opts["silent"] = true
+  end
 
-	vim.keymap.set(mode, key, cmd, opts)
+  vim.keymap.set(mode, key, cmd, opts)
 end
 
 function M.get_session_name()
@@ -27,5 +27,26 @@ function M.get_session_name()
   end
 end
 
+function M.handle_eol()
+  local eol = vim.api.nvim_buf_get_option(0, "eol")
+  local fixeol = vim.api.nvim_buf_get_option(0, "fixeol")
+  local current_filetype = vim.bo.filetype
+  local current_file_format = vim.bo.fileformat
+
+  if eol or fixeol and (current_file_format ~= "unix" or current_filetype == "php") then
+    M.set_eol()
+    vim.notify("Handled EOL for this buffer", vim.log.levels.INFO)
+  end
+end
+
+function M.set_eol(opts)
+  vim.api.nvim_buf_set_option(0, "eol", false)
+  vim.api.nvim_buf_set_option(0, "fixeol", false)
+  vim.cmd([[ update ]])
+
+  if opts["save"] ~= nil and opts["save"] == true then
+    vim.cmd([[ w ]])
+  end
+end
 
 return M

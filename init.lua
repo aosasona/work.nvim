@@ -1,4 +1,5 @@
-local kmap = require("utils").create_keymap
+local utils = require("utils")
+local kmap = utils.create_keymap
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -22,6 +23,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins")
 
 -- Gruvbox settings
+vim.opt.termguicolors = true
 vim.g.gruvbox_material_background = "hard"
 vim.g.gruvbox_material_better_performance = 1
 
@@ -77,6 +79,13 @@ vim.opt.splitbelow = true
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
+-- Handle EOL and no EOL
+-- If the file already has noeol set, we want to leave it as it is
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  desc = "Handle EOL automatically depending on previous setting",
+  callback = utils.handle_eol,
+})
+
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copying) text",
@@ -113,7 +122,7 @@ require("mason-lspconfig").setup_handlers({
 local resession = require("resession")
 local session_name = require("utils").get_session_name
 
--- Auto-load sesison for current directory or branch (depending on where we're at)
+-- Auto-load sesison for current directory or branch (depending on where we"re at)
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     -- Only load the session if nvim was started with no args
@@ -134,10 +143,18 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 --
 -- In the future, it"ll be nice to refactor these into their own tables and files
 
+local function set_eol()
+  utils.set_eol({ save = true })
+end
 -- Misc
 kmap("n", "<leader>w", "<cmd>:w<CR>", { desc = "Save buffer" })
 kmap("n", "<leader>Q", "<cmd>:qa<CR>", { desc = "Exit and close all tabs" })
 kmap("n", "<leader>m", "<cmd>:marks<CR>", { desc = "Show all marks" })
+kmap("n", "<leader>eo", set_eol, { desc = "Disable and fix DOS EOL manually" })
+
+-- Move Lines
+kmap("x", "J", ":move '>+1<cr>gv-gv", { desc = "Move selected line(s) down" })
+kmap("x", "K", ":move '<-2<cr>gv-gv", { desc = "Move selected line(s) down" })
 
 -- Panes
 kmap("n", "<C-\\>", "<cmd>:vsplit<CR>", { desc = "Split vertically" })
@@ -148,15 +165,15 @@ kmap("n", "<leader>t", "<cmd>:tabnew<CR>", { desc = "Create tab after current ta
 kmap("n", "<leader>T", "<cmd>:-tabnew<CR>", { desc = "Create tab before current tab" })
 kmap("n", "<leader>c", "<cmd>:tabclose<CR>", { desc = "Close current tab" })
 
--- Trouble
-kmap("n", "<leader>xx", "<cmd>:TroubleToggle<CR>", { desc = "Toggle trouble" })
-kmap("n", "<leader>xr", "<cmd>:TroubleRefresh<CR>", { desc = "Refresh trouble" })
-
 -- Tab navigation
 kmap("n", "L", "<cmd>:tabnext<CR>", { desc = "Move to next tab" })
 kmap("n", "H", "<cmd>:tabprevious<CR>", { desc = "Move to previous tab" })
 kmap("n", "<leader>]", "<cmd>:+tabmove<CR>", { desc = "Move current tab to the right" })
 kmap("n", "<leader>[", "<cmd>:-tabmove<CR>", { desc = "Move current tab to the left" })
+
+-- Trouble
+kmap("n", "<leader>xx", "<cmd>:TroubleToggle<CR>", { desc = "Toggle trouble" })
+kmap("n", "<leader>xr", "<cmd>:TroubleRefresh<CR>", { desc = "Refresh trouble" })
 
 -- Code "actions" and LSP stuff
 kmap("v", "<leader>/", "gc", { noremap = false, desc = "Toggle commenting current selection" })
@@ -164,23 +181,29 @@ kmap("n", "<leader>/", "gcc", { noremap = false, desc = "Toggle commenting line 
 
 kmap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, desc = "Go to definition" })
 kmap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, desc = "Go to definition" })
+kmap("n", "gt", "<cmd>tabnew | vim.lsp.buf.definition()<CR>", { noremap = true, desc = "Go to definition in new tab" })
 
 kmap("n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", { noremap = true, desc = "Show diagnostic info" })
-
 kmap("n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, desc = "Go to implementation" })
 kmap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", { noremap = true, desc = "Show references" })
 kmap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", { noremap = true, desc = "Hover to show documentation" })
 
+-- Jumplist mapping
+kmap("n", "go", "<C-o>", { noremap = true, desc = "Jump to previous location" })
+kmap("n", "gi", "<C-i>", { noremap = true, desc = "Jump to next location" })
+
 kmap("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { noremap = true, desc = "Show code action menu" })
+kmap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", {
+  noremap = true,
+  desc = "Format current buffer",
+})
 kmap("n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", { noremap = true, desc = "Rename symbol" })
 kmap("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { noremap = true, desc = "Show signature help" })
 kmap("n", "]d", "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", { noremap = true, desc = "Go to next diagnosis" })
-kmap(
-  "n",
-  "]D",
-  "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
-  { noremap = true, desc = "Go to previous diagnosis" }
-)
+kmap("n", "]D", "<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>", {
+  noremap = true,
+  desc = "Go to previous diagnosis",
+})
 
 -- Disabled on purpose
 -- kmap("n", "<leader>lf", "<cmd>lua vim.lsp.buf.format{ async = true }<cr>", { noremap = true, desc = "Format buffer" })
@@ -192,3 +215,8 @@ kmap("n", "<leader>sa", resession.save_all, { desc = "Save all sessions" })
 kmap("n", "<leader>st", resession.save_tab, { desc = "Save session for current tab" })
 kmap("n", "<leader>s.", resession.load, { desc = "Load last session for current directory" })
 kmap("n", "<leader>sd", resession.delete, { desc = "Select and delete session" })
+
+-- Git stuff
+kmap("n", "<leader>gb", "<cmd>GitBlameToggle<CR>", { desc = "Toggle Git blame" })
+kmap("n", "<leader>gc", "<cmd>GitBlameCopyCommitURL<CR>", { desc = "Copy commit URL" })
+kmap("n", "<leader>gC", "<cmd>GitBlameCopyFileURL<CR>", { desc = "Copy file upstream URL" })

@@ -1,6 +1,18 @@
 return {
-	"tpope/vim-sleuth",
+	{
+		"tpope/vim-sleuth",
+		lazy = false,
+	},
 	"tpope/vim-surround",
+	"projekt0n/github-nvim-theme",
+	{
+		"f-person/git-blame.nvim",
+		config = function()
+			require("gitblame").setup({
+				enabled = false,
+			})
+		end,
+	},
 	"saadparwaiz1/cmp_luasnip",
 	{
 		"AlexvZyl/nordic.nvim",
