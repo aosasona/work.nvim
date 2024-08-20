@@ -3,6 +3,49 @@ return {
 		"tpope/vim-sleuth",
 		lazy = false,
 	},
+	{
+		'MagicDuck/grug-far.nvim',
+		config = function()
+			require('grug-far').setup({});
+		end
+	},
+
+	{
+		"stevearc/oil.nvim",
+		opts = {},
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
+	{
+		"zbirenbaum/copilot.lua",
+		cmd = "Copilot",
+		event = "InsertEnter",
+		config = function()
+			require("copilot").setup({
+				panel = {
+					auto_refresh = true,
+				},
+				suggestion = {
+					auto_trigger = true,
+					keymap = {
+						accept = "<C-l>",
+						dismiss = "<C-]>",
+						next = "<C-j>",
+						prev = "<C-k>",
+					}
+				}
+			})
+		end,
+	},
+	{
+		"akinsho/git-conflict.nvim",
+		version = "*",
+		config = true,
+	},
+	{
+		"luckasRanarison/tailwind-tools.nvim",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		opts = {},
+	},
 	"tpope/vim-surround",
 	"projekt0n/github-nvim-theme",
 	{
@@ -133,16 +176,16 @@ return {
 			{ "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
 		},
 		config = function()
-			require("telescope").setup({})
+			require("telescope").setup({
+				pickers = {
+					find_files = {
+						hidden = true,
+					},
+				},
+			})
 
 			pcall(require("telescope").load_extension, "fzf")
 			pcall(require("telescope").load_extension, "ui-select")
-
-			-- Telescope keymaps
-			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Search files" })
-			-- vim.keymap.set("n", "<leader>fW", builtin.grep_string, { desc = "Search current word" })
-			-- vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
 		end,
 	},
 	{
@@ -172,9 +215,7 @@ return {
 		"folke/trouble.nvim",
 		dependencies = "nvim-tree/nvim-web-devicons",
 		config = function()
-			require("trouble").setup({
-				icons = false,
-			})
+			require("trouble").setup({})
 		end,
 	},
 	{
@@ -201,5 +242,13 @@ return {
 				handlers = {},
 			})
 		end,
+	},
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		config = function()
+			require("ibl").setup()
+		end,
+		opts = {},
 	},
 }
