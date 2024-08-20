@@ -55,7 +55,7 @@ function M.toggle_spellcheck()
 		vim.opt_local.spelllang = "en"
 	else
 		vim.opt_local.spell = true
-		vim.opt_local.spelllang = {"en_gb"}
+		vim.opt_local.spelllang = { "en_gb" }
 	end
 end
 

@@ -4,10 +4,10 @@ return {
 		lazy = false,
 	},
 	{
-		'MagicDuck/grug-far.nvim',
+		"MagicDuck/grug-far.nvim",
 		config = function()
-			require('grug-far').setup({});
-		end
+			require("grug-far").setup({})
+		end,
 	},
 
 	{
@@ -31,8 +31,8 @@ return {
 						dismiss = "<C-]>",
 						next = "<C-j>",
 						prev = "<C-k>",
-					}
-				}
+					},
+				},
 			})
 		end,
 	},
@@ -173,7 +173,7 @@ return {
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-			{ "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
+			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 		},
 		config = function()
 			require("telescope").setup({
@@ -204,7 +204,7 @@ return {
 		end,
 	},
 	{ "sainnhe/gruvbox-material", as = "gruvbox-material", lazy = false },
-	{ "numToStr/Comment.nvim",    opts = {} },
+	{ "numToStr/Comment.nvim", opts = {} },
 	{
 		"windwp/nvim-autopairs",
 		config = function()

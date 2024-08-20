@@ -101,7 +101,6 @@ vim.opt.inccommand = "split"
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 
-
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
@@ -144,25 +143,25 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 
 -- Vim clipboard OSC52 integration
 -- I don't have xclip here, so I'm using the OSC52 integration
-if os.getenv "SSH_CLIENT" ~= nil or os.getenv "SSH_TTY" ~= nil then
-    local function handle_paste(_)
-        return function(_)
-            local content = vim.fn.getreg '"'
-            return vim.split(content, "\n")
-        end
-    end
+if os.getenv("SSH_CLIENT") ~= nil or os.getenv("SSH_TTY") ~= nil then
+	local function handle_paste(_)
+		return function(_)
+			local content = vim.fn.getreg('"')
+			return vim.split(content, "\n")
+		end
+	end
 
-    vim.g.clipboard = {
-        name = "OSC 52",
-        copy = {
-            ["+"] = require("vim.ui.clipboard.osc52").copy "+",
-            ["*"] = require("vim.ui.clipboard.osc52").copy "*",
-        },
-        paste = {
-            ["+"] = handle_paste "+",
-            ["*"] = handle_paste "*",
-        },
-    }
+	vim.g.clipboard = {
+		name = "OSC 52",
+		copy = {
+			["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+			["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+		},
+		paste = {
+			["+"] = handle_paste("+"),
+			["*"] = handle_paste("*"),
+		},
+	}
 end
 
 -- ########### Keymaps ########### --
