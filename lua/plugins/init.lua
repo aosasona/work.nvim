@@ -1,4 +1,11 @@
 return {
+	"nyoom-engineering/oxocarbon.nvim",
+	{
+		"aosasona/bore.nvim",
+		config = function()
+			require("bore").setup({})
+		end,
+	},
 	{
 		"tpope/vim-sleuth",
 		lazy = false,
