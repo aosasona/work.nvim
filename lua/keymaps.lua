@@ -21,12 +21,6 @@ return {
 		["<leader>Q"] = { "<cmd>:qa<CR>", desc = "Exit and close all tabs" },
 		["<leader>w"] = { "<cmd>:w<CR>", desc = "Save buffer" },
 		["<leader>m"] = { "<cmd>:marks<CR>", desc = "Show all marks" },
-		["<leader>eo"] = {
-			function()
-				utils.set_eol({ save = true })
-			end,
-			desc = "Disable and fix DOS EOL manually",
-		},
 		["<leader>lH"] = {
 			function()
 				vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
@@ -35,7 +29,7 @@ return {
 		},
 
 		-- Copilot
-		["<leader>cc"] = {
+		["<leader>cs"] = {
 			function()
 				require("copilot.suggestion").toggle_auto_trigger()
 			end,
@@ -68,15 +62,40 @@ return {
 		["<C-_>"] = { "<cmd>:split<CR>", desc = "Split horizontally" },
 
 		-- Tabs
-		["<leader>t"] = { "<cmd>:tabnew<CR>", desc = "Create tab after current tab" },
-		["<leader>T"] = { "<cmd>:-tabnew<CR>", desc = "Create tab before current tab" },
-		["<leader>c"] = { "<cmd>:tabclose<CR>", desc = "Close current tab" },
+		["<leader>t"] = { "", desc = "Tabs/Buffers" },
+		["<leader>tp"] = { "<cmd>:BufferPin<CR>", desc = "Pin/unpin current buffer" },
+
+		-- Go to buffer
+		["<leader>t1"] = { "<cmd>:BufferGoto 1<CR>", desc = "Go to buffer 1" },
+		["<leader>t2"] = { "<cmd>:BufferGoto 2<CR>", desc = "Go to buffer 2" },
+		["<leader>t3"] = { "<cmd>:BufferGoto 3<CR>", desc = "Go to buffer 3" },
+		["<leader>t4"] = { "<cmd>:BufferGoto 4<CR>", desc = "Go to buffer 4" },
+		["<leader>t5"] = { "<cmd>:BufferGoto 5<CR>", desc = "Go to buffer 5" },
+		["<leader>t6"] = { "<cmd>:BufferGoto 6<CR>", desc = "Go to buffer 6" },
+
+
+		-- Close buffer
+		["<leader>c"] = { "<cmd>:BufferClose<CR>", desc = "Close current buffer" },
+		["<leader>tc"] = { "<cmd>:BufferClose<CR>", desc = "Close current buffer" },
+		["<leader>tC"] = { "<cmd>:BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned" },
+		["<leader>tX"] = { "<cmd>:BufferCloseAllButCurrent<CR>", desc = "Close all buffers but current" },
+		["<leader>txl"] = { "<cmd>:BufferCloseBuffersRight<CR>", desc = "Close all buffers to the right" },
+		["<leader>txh"] = { "<cmd>:BufferCloseBuffersLeft<CR>", desc = "Close all buffers to the left" },
+
+		["<leader>td"] = { "<cmd>:BufferDelete<CR>", desc = "Close and delete current buffer" },
+		["<leader>tr"] = { "<cmd>:BufferRestore<CR>", desc = "Restore last tab" },
+
+		-- Order buffers
+		["<leader>to"] = { "", desc = "Order buffers" },
+		["<leader>tod"] = { "<cmd>:BufferOrderByDirectory<CR>", desc = "Order buffers by directory" },
+		["<leader>tol"] = { "<cmd>:BufferOrderByLanguage<CR>", desc = "Order buffers by language" },
+		["<leader>ton"] = { "<cmd>:BufferOrderByName<CR>", desc = "Order buffers by name" },
 
 		-- Tab navigation
-		["L"] = { "<cmd>:tabnext<CR>", desc = "Move to next tab" },
-		["H"] = { "<cmd>:tabprevious<CR>", desc = "Move to previous tab" },
-		["<leader>]"] = { "<cmd>:+tabmove<CR>", desc = "Move current tab to the right" },
-		["<leader>["] = { "<cmd>:-tabmove<CR>", desc = "Move current tab to the left" },
+		["L"] = { "<cmd>:BufferNext<CR>", desc = "Switch to next tab" },
+		["H"] = { "<cmd>:BufferPrevious<CR>", desc = "Switch to previous tab" },
+		["<leader>]"] = { "<cmd>:BufferMoveNext<CR>", desc = "Move current tab to the right" },
+		["<leader>["] = { "<cmd>:BufferMovePrevious<CR>", desc = "Move current tab to the left" },
 
 		-- Trouble
 		["<leader>x"] = { "", desc = "Trouble" },

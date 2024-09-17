@@ -29,10 +29,7 @@ vim.opt.rtp:prepend(lazypath)
 -- require("lazy").setup("plugins")
 require("lazy").setup({
 	spec = {
-		-- add LazyVim and import its plugins
-		-- { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-
-		-- import/override with your plugins
+		-- import/override user plugins
 		{ import = "plugins" },
 	},
 
@@ -43,6 +40,9 @@ require("lazy").setup({
 
 -- Use nvim-notify as default notification handler
 vim.notify = require("notify")
+
+-- Use bore as clipboard provider
+vim.g.clipboard = require("bore.clipboard").get_provider()
 
 -- Gruvbox settings
 vim.opt.termguicolors = true
@@ -65,7 +65,6 @@ vim.opt.foldcolumn = "0"
 vim.opt.foldtext = ""
 vim.opt.foldnestmax = 3
 vim.opt.foldlevel = 99
--- vim.opt.foldlevelstart = 1
 
 -- EOL fix
 vim.opt.fixeol = false
@@ -83,7 +82,8 @@ vim.opt.relativenumber = true
 
 vim.opt.fileformats = "dos,unix"
 
-vim.cmd.colorscheme("gruvbox-material")
+-- vim.cmd.colorscheme("gruvbox-material")
+vim.cmd.colorscheme("oxocarbon")
 
 vim.opt.mouse = "a" -- allow mouse usage
 vim.opt.showmode = false -- hide mode since it is in status line
@@ -120,7 +120,7 @@ vim.opt.hlsearch = true
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
 	callback = function()
 		vim.highlight.on_yank()
 	end,
@@ -129,10 +129,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- LSP setup
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("mason-lspconfig").setup_handlers({
-	function(server_name) -- default handler (optional)
-		require("lspconfig")[server_name].setup({
+	function(server_name)
+		local opts = {
 			capabilities = capabilities,
-		})
+		}
+
+		require("lspconfig")[server_name].setup(opts)
 	end,
 })
 
@@ -156,8 +158,6 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 		resession.save(session_name(), { dir = "dirsession", notify = false })
 	end,
 })
-
-vim.g.clipboard = require("bore.clipboard").get_provider()
 
 -- ########### Keymaps ########### --
 --
