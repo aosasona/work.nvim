@@ -129,15 +129,15 @@ return {
 		["<leader>l"] = { "", desc = "LSP" },
 		["<leader>la"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", noremap = true, desc = "Show code action menu" },
 		["<leader>lf"] = {
-			"<cmd>lua vim.lsp.buf.format( async = true })<CR>",
+			"<cmd>lua vim.lsp.buf.format({ async = true })<CR>",
 			noremap = true,
 			desc = "Format current buffer",
 		},
 		["<leader>lr"] = { "<cmd>lua vim.lsp.buf.rename()<cr>", noremap = true, desc = "Rename symbol" },
 		["<leader>ls"] = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", noremap = true, desc = "Show signature help" },
-		["]d"] = { "<cmd>lua vim.diagnostic.goto_next(buffer=0})<cr>", noremap = true, desc = "Go to next diagnosis" },
+		["]d"] = { "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", noremap = true, desc = "Go to next diagnosis" },
 		["]D"] = {
-			"<cmd>lua vim.diagnostic.goto_prev(buffer=0})<cr>",
+			"<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
 			noremap = true,
 			desc = "Go to previous diagnosis",
 		},
