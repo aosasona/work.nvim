@@ -85,8 +85,8 @@ vim.opt.fileformats = "dos,unix"
 -- vim.cmd.colorscheme("gruvbox-material")
 vim.cmd.colorscheme("oxocarbon")
 
-vim.opt.mouse = "a" -- allow mouse usage
-vim.opt.showmode = false -- hide mode since it is in status line
+vim.opt.mouse = "a"               -- allow mouse usage
+vim.opt.showmode = false          -- hide mode since it is in status line
 
 vim.opt.clipboard = "unnamedplus" -- sync system and Neovim clipboard
 
@@ -133,6 +133,50 @@ require("mason-lspconfig").setup_handlers({
 		local opts = {
 			capabilities = capabilities,
 		}
+
+		-- Additional options for lua_ls
+		if server_name == "lua_ls" then
+			opts.on_init = function(client)
+				if client.workspace_folders then
+					local path = client.workspace_folders[1].name
+					if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+						return
+					end
+				end
+
+				client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+					runtime = {
+						-- Tell the language server which version of Lua you're using
+						-- (most likely LuaJIT in the case of Neovim)
+						version = "LuaJIT",
+					},
+					-- Make the server aware of Neovim runtime files
+					workspace = {
+						checkThirdParty = false,
+						library = {
+							vim.env.VIMRUNTIME,
+							-- Depending on the usage, you might want to add additional paths here.
+							-- "${3rd}/luv/library"
+							-- "${3rd}/busted/library",
+						},
+						-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+						-- library = vim.api.nvim_get_runtime_file("", true)
+					},
+				})
+			end
+
+			opts.settings = {
+				Lua = {
+					runtime = {
+						version = "LuaJIT",
+						path = vim.split(package.path, ";"),
+					},
+					diagnostics = {
+						globals = { "vim" },
+					},
+				},
+			}
+		end
 
 		require("lspconfig")[server_name].setup(opts)
 	end,
