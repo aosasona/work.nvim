@@ -8,6 +8,10 @@ return {
 	n = {
 		["<Esc>"] = { "<cmd>nohlsearch<CR>" },
 
+		-- Splits
+		["<C-\\>"] = { "<cmd>:vsplit<CR>", desc = "Split vertically" },
+		["<C-_>"] = { "<cmd>:split<CR>", desc = "Split horizontally" },
+
 		-- Keybinds to make split navigation easier.
 		--  Use CTRL+<hjkl> to switch between windows
 		--
@@ -16,6 +20,12 @@ return {
 		["<C-l>"] = { "<C-w>l", desc = "Move focus to the right window" },
 		["<C-j>"] = { "<C-w><C-j>", desc = "Move focus to the lower window" },
 		["<C-k>"] = { "<C-w><C-k>", desc = "Move focus to the upper window" },
+
+		-- Resize splits
+		["<C-Right>"] = { "<C-w>8>", desc = "Increase width of window" },
+		["<C-Left>"] = { "<C-w>8<", desc = "Decrease width of window" },
+		["<C-Up>"] = { "<C-w>5+", desc = "Increase height of window" },
+		["<C-Down>"] = { "<C-w>5-", desc = "Decrease height of window" },
 
 		-- Misc useful maps
 		["<leader>Q"] = { "<cmd>:qa<CR>", desc = "Exit and close all tabs" },
@@ -57,10 +67,6 @@ return {
 			noremap = true,
 		},
 
-		-- Panes
-		["<C-\\>"] = { "<cmd>:vsplit<CR>", desc = "Split vertically" },
-		["<C-_>"] = { "<cmd>:split<CR>", desc = "Split horizontally" },
-
 		-- Tabs
 		["<leader>t"] = { "", desc = "Tabs/Buffers" },
 		["<leader>tp"] = { "<cmd>:BufferPin<CR>", desc = "Pin/unpin current buffer" },
@@ -73,11 +79,13 @@ return {
 		["<leader>t5"] = { "<cmd>:BufferGoto 5<CR>", desc = "Go to buffer 5" },
 		["<leader>t6"] = { "<cmd>:BufferGoto 6<CR>", desc = "Go to buffer 6" },
 
-
 		-- Close buffer
 		["<leader>c"] = { "<cmd>:BufferClose<CR>", desc = "Close current buffer" },
 		["<leader>tc"] = { "<cmd>:BufferClose<CR>", desc = "Close current buffer" },
-		["<leader>tC"] = { "<cmd>:BufferCloseAllButCurrentOrPinned<CR>", desc = "Close all buffers but current or pinned" },
+		["<leader>tC"] = {
+			"<cmd>:BufferCloseAllButCurrentOrPinned<CR>",
+			desc = "Close all buffers but current or pinned",
+		},
 		["<leader>tX"] = { "<cmd>:BufferCloseAllButCurrent<CR>", desc = "Close all buffers but current" },
 		["<leader>txl"] = { "<cmd>:BufferCloseBuffersRight<CR>", desc = "Close all buffers to the right" },
 		["<leader>txh"] = { "<cmd>:BufferCloseBuffersLeft<CR>", desc = "Close all buffers to the left" },
@@ -119,7 +127,11 @@ return {
 
 		["gd"] = { "<cmd>lua vim.lsp.buf.definition()<CR>", noremap = true, desc = "Go to definition" },
 		["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<CR>", noremap = true, desc = "Go to definition" },
-		["gt"] = { "<cmd>tab split | lua vim.lsp.buf.definition()<CR>", noremap = true, desc = "Go to definition in new tab" },
+		["gt"] = {
+			"<cmd>tab split | lua vim.lsp.buf.definition()<CR>",
+			noremap = true,
+			desc = "Go to definition in new tab",
+		},
 
 		["gl"] = { "<cmd>lua vim.diagnostic.open_float()<CR>", noremap = true, desc = "Show diagnostic info" },
 		["gI"] = { "<cmd>lua vim.lsp.buf.implementation()<CR>", noremap = true, desc = "Go to implementation" },
@@ -128,6 +140,7 @@ return {
 
 		["<leader>l"] = { "", desc = "LSP" },
 		["<leader>la"] = { "<cmd>lua vim.lsp.buf.code_action()<cr>", noremap = true, desc = "Show code action menu" },
+		["<leader>ld"] = { "<cmd>lua vim.diagnostic.open_float()<CR>", noremap = true, desc = "Show diagnostic info" },
 		["<leader>lf"] = {
 			"<cmd>lua vim.lsp.buf.format({ async = true })<CR>",
 			noremap = true,
@@ -135,9 +148,13 @@ return {
 		},
 		["<leader>lr"] = { "<cmd>lua vim.lsp.buf.rename()<cr>", noremap = true, desc = "Rename symbol" },
 		["<leader>ls"] = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", noremap = true, desc = "Show signature help" },
-		["]d"] = { "<cmd>lua vim.diagnostic.goto_next({buffer=0})<cr>", noremap = true, desc = "Go to next diagnosis" },
+		["]d"] = {
+			"<cmd>lua vim.diagnostic.goto_next({ buffer = 0 })<cr>",
+			noremap = true,
+			desc = "Go to next diagnosis",
+		},
 		["]D"] = {
-			"<cmd>lua vim.diagnostic.goto_prev({buffer=0})<cr>",
+			"<cmd>lua vim.diagnostic.goto_prev({ buffer = 0 })<cr>",
 			noremap = true,
 			desc = "Go to previous diagnosis",
 		},
@@ -174,7 +191,15 @@ return {
 
 		-- Telescope bindings
 		["<leader>f"] = { "", desc = "Telescope" },
-		["<leader>ff"] = { builtin.find_files, desc = "Search files" },
+		["<leader>fF"] = { builtin.find_files, desc = "Search files" },
+		["<leader>ff"] = {
+			function()
+				require("telescope.builtin").find_files({
+					find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
+				})
+			end,
+			desc = "Search files",
+		},
 		["<leader>fw"] = { builtin.grep_string, desc = "Search current word" },
 		["<leader>fg"] = { builtin.live_grep, desc = "Live grep in current directory/workspace" },
 	},
