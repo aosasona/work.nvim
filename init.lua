@@ -26,7 +26,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- require("lazy").setup("plugins")
+-- Setup lazy.nvim
 require("lazy").setup({
 	spec = {
 		-- import/override user plugins
@@ -126,28 +126,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Show command bar on bottom when recording a macro
-vim.api.nvim_create_autocmd("RecordingEnter", {
-	desc = "Show command bar on bottom when recording a macro",
-	group = vim.api.nvim_create_augroup("recording-enter", { clear = true }),
-	callback = function()
-		vim.opt.cmdheight = 1
-		vim.cmd("redraw")
-
-		-- Get the key being recorded into (e.g. q)
-		vim.notify("Recording macro...", vim.log.levels.INFO, { title = "Macro Recording" })
-	end,
-})
-vim.api.nvim_create_autocmd("RecordingLeave", {
-	desc = "Hide command bar on bottom when recording a macro",
-	group = vim.api.nvim_create_augroup("recording-leave", { clear = true }),
-	callback = function()
-		vim.opt.cmdheight = 0
-		vim.cmd("redraw")
-		vim.notify("Macro recorded", vim.log.levels.INFO, { title = "Macro Recording" })
-	end,
-})
-
 -- LSP setup
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("mason-lspconfig").setup_handlers({
@@ -177,9 +155,6 @@ require("mason-lspconfig").setup_handlers({
 						checkThirdParty = false,
 						library = {
 							vim.env.VIMRUNTIME
-							-- Depending on the usage, you might want to add additional paths here.
-							-- "${3rd}/luv/library"
-							-- "${3rd}/busted/library",
 						}
 						-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
 						-- library = vim.api.nvim_get_runtime_file("", true)

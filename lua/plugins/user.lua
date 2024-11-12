@@ -1,6 +1,6 @@
 return {
 	{ "rcarriga/nvim-notify", as = "notify" },
-	{ "tpope/vim-sleuth", lazy = false },
+	{ "tpope/vim-sleuth",     lazy = false },
 	{
 		'MagicDuck/grug-far.nvim',
 		config = function() require('grug-far').setup({}); end
@@ -40,9 +40,7 @@ return {
 	{
 		"f-person/git-blame.nvim",
 		config = function()
-			require("gitblame").setup({
-				enabled = false,
-			})
+			require("gitblame").setup({})
 		end,
 	},
 	{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
@@ -96,7 +94,7 @@ return {
 	{
 		"uga-rosa/ccc.nvim",
 		lazy = false,
-		config = function ()
+		config = function()
 			require('ccc').setup {
 				highlighter = {
 					auto_enable = true,
