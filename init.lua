@@ -126,6 +126,28 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Show command bar on bottom when recording a macro
+vim.api.nvim_create_autocmd("RecordingEnter", {
+	desc = "Show command bar on bottom when recording a macro",
+	group = vim.api.nvim_create_augroup("recording-enter", { clear = true }),
+	callback = function()
+		vim.opt.cmdheight = 1
+		vim.cmd("redraw")
+
+		-- Get the key being recorded into (e.g. q)
+		vim.notify("Recording macro...", vim.log.levels.INFO, { title = "Macro Recording" })
+	end,
+})
+vim.api.nvim_create_autocmd("RecordingLeave", {
+	desc = "Hide command bar on bottom when recording a macro",
+	group = vim.api.nvim_create_augroup("recording-leave", { clear = true }),
+	callback = function()
+		vim.opt.cmdheight = 0
+		vim.cmd("redraw")
+		vim.notify("Macro recorded", vim.log.levels.INFO, { title = "Macro Recording" })
+	end,
+})
+
 -- LSP setup
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("mason-lspconfig").setup_handlers({
@@ -139,29 +161,29 @@ require("mason-lspconfig").setup_handlers({
 			opts.on_init = function(client)
 				if client.workspace_folders then
 					local path = client.workspace_folders[1].name
-					if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
+					if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
 						return
 					end
 				end
 
-				client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+				client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
 					runtime = {
 						-- Tell the language server which version of Lua you're using
 						-- (most likely LuaJIT in the case of Neovim)
-						version = "LuaJIT",
+						version = 'LuaJIT'
 					},
 					-- Make the server aware of Neovim runtime files
 					workspace = {
 						checkThirdParty = false,
 						library = {
-							vim.env.VIMRUNTIME,
+							vim.env.VIMRUNTIME
 							-- Depending on the usage, you might want to add additional paths here.
 							-- "${3rd}/luv/library"
 							-- "${3rd}/busted/library",
-						},
+						}
 						-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
 						-- library = vim.api.nvim_get_runtime_file("", true)
-					},
+					}
 				})
 			end
 
