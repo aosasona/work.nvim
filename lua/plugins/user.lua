@@ -45,15 +45,6 @@ return {
 			})
 		end,
 	},
-	{
-		"nvim-lualine/lualine.nvim",
-		config = function()
-			require("lualine").setup({})
-		end,
-		dependencies = {
-			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-		},
-	},
 	{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 	{
 		"folke/which-key.nvim",
@@ -101,5 +92,17 @@ return {
 		main = "ibl",
 		config = function() require("ibl").setup() end,
 		opts = {},
+	},
+	{
+		"uga-rosa/ccc.nvim",
+		lazy = false,
+		config = function ()
+			require('ccc').setup {
+				highlighter = {
+					auto_enable = true,
+					lsp = true,
+				}
+			}
+		end
 	},
 }
